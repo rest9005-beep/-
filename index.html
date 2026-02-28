@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>СОНЯ ТУБ</title>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header id="header" role="banner">
+  <button class="icon-btn" id="burger" aria-label="Меню" onclick="UI.toggleSidebar()">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+
+  <div id="logo" onclick="Router.go('/')" aria-label="СОНЯ ТУБ — главная" role="link">
+    <svg class="logo-full" width="130" height="32" viewBox="0 0 130 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="0" y="4" width="42" height="24" rx="7" fill="#c9000a"/>
+      <path d="M16 10 L30 16 L16 22 Z" fill="white"/>
+      <text x="50" y="23" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-weight="800" font-size="15" fill="currentColor" letter-spacing="-0.5">СОНЯ ТУБ</text>
+    </svg>
+    <svg class="logo-small" width="36" height="32" viewBox="0 0 42 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="0" y="4" width="42" height="24" rx="7" fill="#c9000a"/>
+      <path d="M16 10 L30 16 L16 22 Z" fill="white"/>
+    </svg>
+  </div>
+
+  <div id="search-wrap" role="search">
+    <div id="search-container">
+      <input type="search" id="search-input" placeholder="Поиск" autocomplete="off" aria-label="Поиск видео" aria-autocomplete="list">
+      <div id="search-suggestions" role="listbox" aria-label="Подсказки поиска"></div>
+    </div>
+    <button id="search-btn" onclick="Search.execute()" aria-label="Найти">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <span>Найти</span>
+    </button>
+  </div>
+
+  <div id="header-right">
+    <button class="upload-btn" onclick="Auth.requireLogin(Upload.openModal)" aria-label="Загрузить видео">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <span>Загрузить</span>
+    </button>
+    <button class="icon-btn" id="notif-btn" aria-label="Уведомления">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span id="notif-badge" aria-label="уведомления"></span>
+    </button>
+    <div id="avatar-btn" role="button" aria-label="Профиль" onclick="UI.toggleProfileDropdown()">?</div>
+  </div>
+</header>
+
+<!-- ===== SIDEBAR OVERLAY ===== -->
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="UI.toggleSidebar()"></div>
+
+<!-- ===== SIDEBAR ===== -->
+<nav id="sidebar" aria-label="Навигация">
+  <div class="sidebar-section">
+    <div class="sidebar-item active" data-route="/" onclick="Router.go('/')">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Главная
+    </div>
+    <div class="sidebar-item" data-route="/subscriptions" onclick="Router.go('/subscriptions')">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Подписки
+    </div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-item" data-route="/history" onclick="Router.go('/history')">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4"/><polyline points="3 16 3 11 8 11"/></svg>
+      История
+    </div>
+    <div class="sidebar-item" data-route="/playlists" onclick="Router.go('/playlists')">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      Плейлисты
+    </div>
+    <div class="sidebar-item" data-route="/settings" onclick="Router.go('/settings')">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Настройки
+    </div>
+  </div>
+</nav>
+
+<!-- ===== MAIN ===== -->
+<main id="main" role="main">
+
+  <!-- HOME PAGE -->
+  <div id="page-home" class="page active">
+    <div class="filter-bar" id="filter-bar">
+      <div class="filter-chip active" onclick="Search.setFilter('all',this)">Все</div>
+      <div class="filter-chip" onclick="Search.setFilter('recent',this)">Новые</div>
+      <div class="filter-chip" onclick="Search.setFilter('popular',this)">Популярное</div>
+    </div>
+    <div class="video-grid" id="home-grid"></div>
+  </div>
+
+  <!-- WATCH PAGE -->
+  <div id="page-watch" class="page">
+    <div class="watch-layout">
+      <div class="watch-player-wrap">
+        <video id="main-video" controls playsinline preload="metadata" aria-label="Видеоплеер"></video>
+        <h1 class="watch-title" id="watch-title"></h1>
+        <div class="watch-actions" id="watch-actions">
+          <div class="action-group">
+            <button class="action-btn" id="like-btn" onclick="Video.toggleLike()" aria-label="Нравится">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+              <span id="like-count">0</span>
+            </button>
+            <button class="action-btn" id="dislike-btn" onclick="Video.toggleDislike()" aria-label="Не нравится">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
+              <span id="dislike-count">0</span>
+            </button>
+          </div>
+          <button class="action-btn" style="background:var(--bg3);border-radius:25px;border:1.5px solid var(--border)" onclick="Video.share()" aria-label="Поделиться">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            Поделиться
+          </button>
+          <button class="action-btn" style="background:var(--bg3);border-radius:25px;border:1.5px solid var(--border)" onclick="Video.saveToPlaylist()" aria-label="Сохранить в плейлист">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="19" y1="5" x2="19" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 5 19 12"/><path d="M3 5v14a2 2 0 0 0 2 2h14"/></svg>
+            Сохранить
+          </button>
+        </div>
+        <div class="watch-meta" id="watch-meta"></div>
+        <div class="channel-row" id="watch-channel-row">
+          <div class="channel-av" id="watch-ch-av" onclick="Video.goToChannel()"></div>
+          <div>
+            <div class="channel-name" id="watch-ch-name" onclick="Video.goToChannel()"></div>
+            <div class="channel-subs" id="watch-ch-subs"></div>
+          </div>
+          <button class="sub-btn" id="watch-sub-btn" onclick="Video.toggleSub()"></button>
+        </div>
+        <div class="description-box" id="watch-desc-box">
+          <div class="description-text" id="watch-desc"></div>
+          <span class="desc-toggle" id="desc-toggle" onclick="Video.toggleDesc()">Показать ещё</span>
+        </div>
+        <!-- COMMENTS -->
+        <div class="comments-section">
+          <h3 id="comments-header">Комментарии</h3>
+          <div class="comment-form" id="comment-form">
+            <div class="comment-av" id="comment-user-av"></div>
+            <div class="comment-input-wrap">
+              <textarea id="comment-input" placeholder="Оставьте комментарий..." aria-label="Ввод комментария" maxlength="2000"></textarea>
+              <button class="btn-primary comment-submit" onclick="Comments.add()" aria-label="Отправить комментарий">Отправить</button>
+            </div>
+          </div>
+          <div class="comment-sort">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="9" y1="12" x2="21" y2="12"/><line x1="15" y1="18" x2="21" y2="18"/></svg>
+            Сортировка:
+            <select id="comment-sort-sel" onchange="Comments.sort(this.value)" aria-label="Сортировка комментариев">
+              <option value="new">Новые</option>
+              <option value="top">Популярные</option>
+            </select>
+          </div>
+          <div id="comments-list"></div>
+        </div>
+      </div>
+      <!-- RECOMMENDATIONS -->
+      <aside aria-label="Рекомендации">
+        <h2 class="section-title">Далее</h2>
+        <div class="rec-list" id="rec-list"></div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- CHANNEL PAGE -->
+  <div id="page-channel" class="page">
+    <div class="channel-banner" id="channel-banner"></div>
+    <div class="channel-header-info">
+      <div class="channel-big-av" id="channel-big-av"></div>
+      <div class="channel-name-block">
+        <div class="channel-big-name" id="channel-big-name"></div>
+        <div class="channel-stats" id="channel-stats"></div>
+      </div>
+      <button class="sub-btn channel-sub-btn btn-primary" id="channel-sub-btn" onclick="Channel.toggleSub()"></button>
+    </div>
+    <div class="channel-tabs">
+      <div class="channel-tab active" onclick="Channel.setTab('videos',this)">Видео</div>
+      <div class="channel-tab" onclick="Channel.setTab('playlists',this)">Плейлисты</div>
+      <div class="channel-tab" onclick="Channel.setTab('about',this)">О канале</div>
+    </div>
+    <div id="channel-content"></div>
+  </div>
+
+  <!-- SUBSCRIPTIONS -->
+  <div id="page-subscriptions" class="page">
+    <h2 class="section-title">Подписки</h2>
+    <div id="subs-content"></div>
+  </div>
+
+  <!-- HISTORY -->
+  <div id="page-history" class="page">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <h2 class="section-title" style="margin:0">История просмотров</h2>
+      <button class="btn-secondary" onclick="History.clear()">Очистить</button>
+    </div>
+    <div id="history-list"></div>
+  </div>
+
+  <!-- PLAYLISTS -->
+  <div id="page-playlists" class="page">
+    <h2 class="section-title">Плейлисты</h2>
+    <div class="playlist-grid" id="playlists-grid"></div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div id="page-settings" class="page">
+    <h2 class="section-title">Настройки</h2>
+    <div id="settings-content"></div>
+  </div>
+
+  <!-- SEARCH RESULTS -->
+  <div id="page-search" class="page">
+    <h2 class="section-title" id="search-result-title">Результаты поиска</h2>
+    <div id="search-results-grid"></div>
+  </div>
+
+</main>
+
+<!-- ===== MOBILE NAV ===== -->
+<nav id="mobile-nav" aria-label="Мобильная навигация">
+  <div class="mobile-nav-item active" data-mroute="/" onclick="Router.go('/')">
+    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+    Главная
+  </div>
+  <div class="mobile-nav-item" data-mroute="/subscriptions" onclick="Router.go('/subscriptions')">
+    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+    Подписки
+  </div>
+  <div class="mobile-nav-item" onclick="Auth.requireLogin(Upload.openModal)">
+    <div style="width:38px;height:38px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </div>
+    Загрузить
+  </div>
+  <div class="mobile-nav-item" data-mroute="/history" onclick="Router.go('/history')">
+    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4"/></svg>
+    История
+  </div>
+  <div class="mobile-nav-item" onclick="UI.toggleProfileDropdown()">
+    <div id="mobile-av" style="width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.65rem;overflow:hidden">?</div>
+    Я
+  </div>
+</nav>
+
+<!-- ===== PROFILE DROPDOWN ===== -->
+<div id="profile-dropdown" role="menu" aria-label="Меню профиля">
+  <div class="profile-dd-header">
+    <div class="profile-dd-av" id="dd-av"></div>
+    <div>
+      <div class="profile-dd-name" id="dd-name">Гость</div>
+      <div class="profile-dd-username" id="dd-username">Войдите в аккаунт</div>
+    </div>
+  </div>
+  <div id="dd-auth-items">
+    <div class="profile-dd-item" onclick="Auth.openModal();UI.closeProfileDropdown()" role="menuitem">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      Войти / Зарегистрироваться
+    </div>
+  </div>
+  <div id="dd-user-items" style="display:none">
+    <div class="profile-dd-item" onclick="Router.go('/settings');UI.closeProfileDropdown()" role="menuitem">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Настройки
+    </div>
+    <div class="profile-dd-item" onclick="Channel.open(Auth.currentUser());UI.closeProfileDropdown()" role="menuitem">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      Мой канал
+    </div>
+    <div class="profile-dd-sep"></div>
+    <div class="profile-dd-item" onclick="UI.toggleTheme();UI.closeProfileDropdown()" role="menuitem" id="dd-theme-item">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      Тёмная тема
+    </div>
+    <div class="profile-dd-sep"></div>
+    <div class="profile-dd-item" onclick="Auth.logout()" role="menuitem" style="color:#dc2626">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Выйти
+    </div>
+  </div>
+</div>
+
+<!-- ===== AUTH MODAL ===== -->
+<div class="modal-overlay hidden" id="auth-modal" role="dialog" aria-modal="true" aria-label="Вход / Регистрация">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Добро пожаловать в СОНЯ ТУБ</div>
+      <button class="modal-close" onclick="Auth.closeModal()" aria-label="Закрыть"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="form-tabs">
+      <div class="form-tab active" onclick="Auth.switchTab('login',this)">Вход</div>
+      <div class="form-tab" onclick="Auth.switchTab('register',this)">Регистрация</div>
+    </div>
+    <div id="auth-form-content"></div>
+  </div>
+</div>
+
+<!-- ===== UPLOAD MODAL ===== -->
+<div class="modal-overlay hidden" id="upload-modal" role="dialog" aria-modal="true" aria-label="Загрузка видео">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-header">
+      <div class="modal-title">Загрузить видео</div>
+      <button class="modal-close" onclick="Upload.closeModal()" aria-label="Закрыть"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div id="upload-form-content"></div>
+  </div>
+</div>
+
+<!-- ===== PLAYLIST SAVE MODAL ===== -->
+<div class="modal-overlay hidden" id="playlist-modal" role="dialog" aria-modal="true" aria-label="Сохранить в плейлист">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-header">
+      <div class="modal-title">Сохранить в плейлист</div>
+      <button class="modal-close" onclick="Playlists.closeSaveModal()" aria-label="Закрыть"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div id="playlist-modal-content"></div>
+  </div>
+</div>
+
+<!-- ===== TOAST CONTAINER ===== -->
+<div id="toast-container" aria-live="polite"></div>
+
+<!-- ===== SCRIPT ===== -->
+
+  <script src="app.js" defer></script>
+</body>
+</html>
